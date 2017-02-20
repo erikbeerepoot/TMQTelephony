@@ -20,7 +20,7 @@ public class Call {
     ///Is this call in progress?
     public var isActive : Bool = false {
         didSet {
-            if !isActive {
+            if isActive == false && oldValue != false {
                 endDate = Date()
             }
         }
@@ -39,10 +39,10 @@ public class Call {
     fileprivate var endDate = Date()
     
     //Duration in seconds
-    var duration : TimeInterval {
+    public var duration : TimeInterval {
         get {
             if isActive {
-                return date.timeIntervalSinceNow
+                return Date().timeIntervalSince(date)
             } else {
                 return endDate.timeIntervalSince(date)
             }
