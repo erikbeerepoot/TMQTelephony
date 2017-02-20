@@ -13,8 +13,21 @@
 		037046EA1E5A22C0002AF879 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046E91E5A22C0002AF879 /* CallManager.swift */; };
 		037046EC1E5A2339002AF879 /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046EB1E5A2339002AF879 /* Call.swift */; };
 		037046EE1E5A2377002AF879 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046ED1E5A2377002AF879 /* Contact.swift */; };
+		037046F61E5A6E26002AF879 /* CallManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046F51E5A6E26002AF879 /* CallManagerTests.swift */; };
+		037046F81E5A6E26002AF879 /* TMQTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03F728F41E5284D5009131AC /* TMQTelephony.framework */; };
+		037046FF1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046FE1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift */; };
 		03F728F91E5284D5009131AC /* TMQTelephony.h in Headers */ = {isa = PBXBuildFile; fileRef = 03F728F71E5284D5009131AC /* TMQTelephony.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		037046F91E5A6E26002AF879 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 03F728EB1E5284D5009131AC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 03F728F31E5284D5009131AC;
+			remoteInfo = TMQTelephony;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		037046DF1E5A0E0A002AF879 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -23,12 +36,24 @@
 		037046E91E5A22C0002AF879 /* CallManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
 		037046EB1E5A2339002AF879 /* Call.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
 		037046ED1E5A2377002AF879 /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
+		037046F31E5A6E26002AF879 /* TMQTelephonyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TMQTelephonyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		037046F51E5A6E26002AF879 /* CallManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManagerTests.swift; sourceTree = "<group>"; };
+		037046F71E5A6E26002AF879 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		037046FE1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwilioNotificationDelegateAdapter.swift; sourceTree = "<group>"; };
 		03F728F41E5284D5009131AC /* TMQTelephony.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TMQTelephony.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		03F728F71E5284D5009131AC /* TMQTelephony.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMQTelephony.h; sourceTree = "<group>"; };
 		03F728F81E5284D5009131AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		037046F01E5A6E26002AF879 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				037046F81E5A6E26002AF879 /* TMQTelephony.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		03F728F01E5284D5009131AC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -53,6 +78,7 @@
 			children = (
 				037046DF1E5A0E0A002AF879 /* NotificationManager.swift */,
 				037046E91E5A22C0002AF879 /* CallManager.swift */,
+				037046FE1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -67,10 +93,20 @@
 			name = "Model ";
 			sourceTree = "<group>";
 		};
+		037046F41E5A6E26002AF879 /* TMQTelephonyTests */ = {
+			isa = PBXGroup;
+			children = (
+				037046F51E5A6E26002AF879 /* CallManagerTests.swift */,
+				037046F71E5A6E26002AF879 /* Info.plist */,
+			);
+			path = TMQTelephonyTests;
+			sourceTree = "<group>";
+		};
 		03F728EA1E5284D5009131AC = {
 			isa = PBXGroup;
 			children = (
 				03F728F61E5284D5009131AC /* TMQTelephony */,
+				037046F41E5A6E26002AF879 /* TMQTelephonyTests */,
 				037046E21E5A1244002AF879 /* Frameworks */,
 				03F728F51E5284D5009131AC /* Products */,
 			);
@@ -80,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				03F728F41E5284D5009131AC /* TMQTelephony.framework */,
+				037046F31E5A6E26002AF879 /* TMQTelephonyTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -109,6 +146,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		037046F21E5A6E26002AF879 /* TMQTelephonyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 037046FB1E5A6E26002AF879 /* Build configuration list for PBXNativeTarget "TMQTelephonyTests" */;
+			buildPhases = (
+				037046EF1E5A6E26002AF879 /* Sources */,
+				037046F01E5A6E26002AF879 /* Frameworks */,
+				037046F11E5A6E26002AF879 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				037046FA1E5A6E26002AF879 /* PBXTargetDependency */,
+			);
+			name = TMQTelephonyTests;
+			productName = TMQTelephonyTests;
+			productReference = 037046F31E5A6E26002AF879 /* TMQTelephonyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		03F728F31E5284D5009131AC /* TMQTelephony */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 03F728FC1E5284D5009131AC /* Build configuration list for PBXNativeTarget "TMQTelephony" */;
@@ -134,9 +189,15 @@
 		03F728EB1E5284D5009131AC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Barefoot Systems";
 				TargetAttributes = {
+					037046F21E5A6E26002AF879 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = B5S56929D8;
+						ProvisioningStyle = Automatic;
+					};
 					03F728F31E5284D5009131AC = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = B5S56929D8;
@@ -158,11 +219,19 @@
 			projectRoot = "";
 			targets = (
 				03F728F31E5284D5009131AC /* TMQTelephony */,
+				037046F21E5A6E26002AF879 /* TMQTelephonyTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		037046F11E5A6E26002AF879 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		03F728F21E5284D5009131AC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -190,11 +259,20 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		037046EF1E5A6E26002AF879 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				037046F61E5A6E26002AF879 /* CallManagerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		03F728EF1E5284D5009131AC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				037046EA1E5A22C0002AF879 /* CallManager.swift in Sources */,
+				037046FF1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift in Sources */,
 				037046E01E5A0E0A002AF879 /* NotificationManager.swift in Sources */,
 				037046EE1E5A2377002AF879 /* Contact.swift in Sources */,
 				037046EC1E5A2339002AF879 /* Call.swift in Sources */,
@@ -204,7 +282,39 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		037046FA1E5A6E26002AF879 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 03F728F31E5284D5009131AC /* TMQTelephony */;
+			targetProxy = 037046F91E5A6E26002AF879 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		037046FC1E5A6E26002AF879 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = B5S56929D8;
+				INFOPLIST_FILE = TMQTelephonyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.barefootsystems.TMQTelephonyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		037046FD1E5A6E26002AF879 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = B5S56929D8;
+				INFOPLIST_FILE = TMQTelephonyTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.barefootsystems.TMQTelephonyTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 		03F728FA1E5284D5009131AC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -364,6 +474,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		037046FB1E5A6E26002AF879 /* Build configuration list for PBXNativeTarget "TMQTelephonyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				037046FC1E5A6E26002AF879 /* Debug */,
+				037046FD1E5A6E26002AF879 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		03F728EE1E5284D5009131AC /* Build configuration list for PBXProject "TMQTelephony" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -8,7 +8,12 @@
 
 import Foundation
 
-class CallManager {
+import CleanroomLogger
+import TwilioVoiceClient
+
+public class CallManager : NSObject, CallDelegate {
+    fileprivate var notificationManager : NotificationManager? = nil
+    
     ///Get list of outgoing calls, in reverse chronological order
     private(set) var outgoingCalls : [Call] = []
     
@@ -16,26 +21,80 @@ class CallManager {
     private(set) var  incomingCalls : [Call] = []
     
     ///Get list of all outgoing and incoming calls, in reverse chronological order
-    var calls : [Call] {
+    public var calls : [Call] {
         get {
             return outgoingCalls + incomingCalls
         }
     }
     
-    ///Get list of all currently active calls
-    var activeCalls : [Call] {
+    ///Get list of all currently active calls (not on hold)
+    public var activeCalls : [Call] {
         get {
             return calls.filter { $0.isActive }
         }
     }
     
+    public init(notificationManager : NotificationManager? = nil) {
+        super.init()
+        
+        if notificationManager == nil {
+            let notificationDelegateWrapper = TwilioNotificationDelegateAdapter(callManager: self)
+            self.notificationManager = NotificationManager(notificationDelegate: notificationDelegateWrapper)
+        } else {
+            self.notificationManager = notificationManager!
+        }
+    }
+    
     ///Get list of all outgoing and incoming calls matching `predicate`, in reverse chronological order
-    func calls(matching predicate : NSPredicate) -> [Call] {
+    public func calls(matching predicate : NSPredicate) -> [Call] {
         return []
     }
     
+    public func call(with uuid : UUID) -> Call? {
+        let call = calls.first(where: { (call) -> Bool in call.uuid == uuid})
+        if call == nil {
+            Log.error?.message("Queried for call with UUID: \(uuid), but no such call exists!")
+        }
+        return call
+    }
+    
     //Initiates an outgoing call
-    func call(contact : Contact) throws {
+    public func call(contact : Contact) throws {
         //do a thing
+    }
+    
+    //MARK: -
+    //MARK: CallDelegate
+    
+    func callDidConnect(_ inCall : Call){
+        guard let call = self.call(with: inCall.uuid) else {
+            Log.error?.message("Call with UUID \(inCall.uuid) connected, but no such call exists!")
+            return
+        }
+        call.isActive = true
+    }
+    
+    func callDidDisconnect(_ inCall : Call){
+        guard let call = self.call(with: inCall.uuid) else {
+            Log.error?.message("Call with UUID \(inCall.uuid) disconnected, but no such call exists!")
+            return
+        }
+        call.isActive = false
+    }
+    
+    func callCancelled(_ inCall : Call){
+        guard let call = self.call(with: inCall.uuid) else {
+            Log.error?.message("Call with UUID \(inCall.uuid) was cancelled, but no such call exists!")
+            return
+        }
+        call.isActive = false
+    }
+    
+    func callReceived(_ inCall : Call){
+        incomingCalls.append(inCall)
+    }
+    
+    func call(_ inCall : Call, didFailWithError : Error){
+        
     }
 }

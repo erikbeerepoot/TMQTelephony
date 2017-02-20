@@ -13,14 +13,25 @@ import PushKit
 import CleanroomLogger
 import TwilioVoiceClient
 
-class NotificationManager : NSObject, PKPushRegistryDelegate {
+public class NotificationManager : NSObject, PKPushRegistryDelegate {
+    let notificationDelegate : TVONotificationDelegate
+    let voiceClient : VoiceClient
     let accessToken = TwilioAccessToken()
     let voipRegistry : PKPushRegistry
     
     var deviceToken : String? = nil
     
-    override init() {
+    
+    init(voiceClient : VoiceClient? = nil, notificationDelegate : TVONotificationDelegate) {
         voipRegistry = PKPushRegistry(queue: DispatchQueue.main)
+        self.notificationDelegate = notificationDelegate
+        
+        //Allow overriding of voiceClient for testing
+        if voiceClient == nil {
+            self.voiceClient = VoiceClient.sharedInstance()
+        } else {
+            self.voiceClient = voiceClient!
+        }
         
         super.init()
         
@@ -29,11 +40,10 @@ class NotificationManager : NSObject, PKPushRegistryDelegate {
     }
     
     //MARK: -
-    //MARK: PKPushRegistryDelegate 
-    
+    //MARK: PKPushRegistryDelegate
     
     ///current push token is now invalid, deregister
-    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenForType type: PKPushType) {
+    public func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenForType type: PKPushType) {
         guard type == .voIP else {
             return
         }
@@ -48,7 +58,7 @@ class NotificationManager : NSObject, PKPushRegistryDelegate {
             return
         }
         
-        VoiceClient.sharedInstance().unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+        voiceClient.unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             
             guard error == nil else {
                 Log.error?.message("Encountered an error in de-registering with Twilio. Error: \(error)")
@@ -60,7 +70,7 @@ class NotificationManager : NSObject, PKPushRegistryDelegate {
     }
     
     ///Updated creds, re-register with server
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials:    PKPushCredentials, forType type: PKPushType) {
+    public func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials:    PKPushCredentials, forType type: PKPushType) {
         guard type == .voIP else {
             return
         }
@@ -73,7 +83,7 @@ class NotificationManager : NSObject, PKPushRegistryDelegate {
         let deviceToken = extract(deviceToken: credentials.token)
         self.deviceToken = deviceToken
         
-        VoiceClient.sharedInstance().register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+        voiceClient.register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             
             guard error == nil else {
                 Log.error?.message("Encountered an error in registering with Twilio. Error: \(error)")
@@ -84,7 +94,7 @@ class NotificationManager : NSObject, PKPushRegistryDelegate {
     }
     
     ///Handle an incoming VoIP push notification
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+    public func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
         guard type == .voIP else {
             return
         }

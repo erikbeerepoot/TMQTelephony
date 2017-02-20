@@ -8,6 +8,6 @@
 
 import Foundation
 
-struct Contact {
+public struct Contact {
     
 }
