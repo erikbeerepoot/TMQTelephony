@@ -7,14 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		037046E01E5A0E0A002AF879 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046DF1E5A0E0A002AF879 /* Notifications.swift */; };
+		037046E01E5A0E0A002AF879 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046DF1E5A0E0A002AF879 /* NotificationManager.swift */; };
 		037046E41E5A1255002AF879 /* TwilioVoiceClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 037046E31E5A1255002AF879 /* TwilioVoiceClient.framework */; };
+		037046E81E5A1C16002AF879 /* TwilioAccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046E71E5A1C16002AF879 /* TwilioAccessToken.swift */; };
+		037046EA1E5A22C0002AF879 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046E91E5A22C0002AF879 /* CallManager.swift */; };
+		037046EC1E5A2339002AF879 /* Call.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046EB1E5A2339002AF879 /* Call.swift */; };
+		037046EE1E5A2377002AF879 /* Contact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046ED1E5A2377002AF879 /* Contact.swift */; };
 		03F728F91E5284D5009131AC /* TMQTelephony.h in Headers */ = {isa = PBXBuildFile; fileRef = 03F728F71E5284D5009131AC /* TMQTelephony.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		037046DF1E5A0E0A002AF879 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		037046DF1E5A0E0A002AF879 /* NotificationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		037046E31E5A1255002AF879 /* TwilioVoiceClient.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TwilioVoiceClient.framework; path = ../Frameworks/TwilioVoiceClient.framework; sourceTree = "<group>"; };
+		037046E71E5A1C16002AF879 /* TwilioAccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwilioAccessToken.swift; sourceTree = "<group>"; };
+		037046E91E5A22C0002AF879 /* CallManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
+		037046EB1E5A2339002AF879 /* Call.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Call.swift; sourceTree = "<group>"; };
+		037046ED1E5A2377002AF879 /* Contact.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contact.swift; sourceTree = "<group>"; };
 		03F728F41E5284D5009131AC /* TMQTelephony.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TMQTelephony.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		03F728F71E5284D5009131AC /* TMQTelephony.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMQTelephony.h; sourceTree = "<group>"; };
 		03F728F81E5284D5009131AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -40,6 +48,25 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		037046E51E5A1BE8002AF879 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				037046DF1E5A0E0A002AF879 /* NotificationManager.swift */,
+				037046E91E5A22C0002AF879 /* CallManager.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		037046E61E5A1BF5002AF879 /* Model  */ = {
+			isa = PBXGroup;
+			children = (
+				037046EB1E5A2339002AF879 /* Call.swift */,
+				037046ED1E5A2377002AF879 /* Contact.swift */,
+				037046E71E5A1C16002AF879 /* TwilioAccessToken.swift */,
+			);
+			name = "Model ";
+			sourceTree = "<group>";
+		};
 		03F728EA1E5284D5009131AC = {
 			isa = PBXGroup;
 			children = (
@@ -60,9 +87,10 @@
 		03F728F61E5284D5009131AC /* TMQTelephony */ = {
 			isa = PBXGroup;
 			children = (
+				037046E61E5A1BF5002AF879 /* Model  */,
+				037046E51E5A1BE8002AF879 /* Controller */,
 				03F728F71E5284D5009131AC /* TMQTelephony.h */,
 				03F728F81E5284D5009131AC /* Info.plist */,
-				037046DF1E5A0E0A002AF879 /* Notifications.swift */,
 			);
 			path = TMQTelephony;
 			sourceTree = "<group>";
@@ -166,7 +194,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				037046E01E5A0E0A002AF879 /* Notifications.swift in Sources */,
+				037046EA1E5A22C0002AF879 /* CallManager.swift in Sources */,
+				037046E01E5A0E0A002AF879 /* NotificationManager.swift in Sources */,
+				037046EE1E5A2377002AF879 /* Contact.swift in Sources */,
+				037046EC1E5A2339002AF879 /* Call.swift in Sources */,
+				037046E81E5A1C16002AF879 /* TwilioAccessToken.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,8 +314,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/iOS/";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/iOS/";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/../Carthage/Build/iOS/",
+					"$(SRCROOT)/../Frameworks",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../Frameworks",
+					"$(SRCROOT)/../Carthage/Build/iOS/",
+				);
 				INFOPLIST_FILE = TMQTelephony/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -305,8 +343,14 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/iOS/";
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/../Carthage/Build/iOS/";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SRCROOT)/../Carthage/Build/iOS/",
+					"$(SRCROOT)/../Frameworks",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../Frameworks",
+					"$(SRCROOT)/../Carthage/Build/iOS/",
+				);
 				INFOPLIST_FILE = TMQTelephony/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
