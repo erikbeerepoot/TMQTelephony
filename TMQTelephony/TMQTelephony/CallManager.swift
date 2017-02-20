@@ -66,7 +66,7 @@ public class CallManager : NSObject, CallDelegate {
     //MARK: -
     //MARK: CallDelegate
     
-    func callDidConnect(_ inCall : Call){
+    public func callDidConnect(_ inCall : Call){
         guard let call = self.call(with: inCall.uuid) else {
             Log.error?.message("Call with UUID \(inCall.uuid) connected, but no such call exists!")
             return
@@ -74,7 +74,7 @@ public class CallManager : NSObject, CallDelegate {
         call.isActive = true
     }
     
-    func callDidDisconnect(_ inCall : Call){
+    public func callDidDisconnect(_ inCall : Call){
         guard let call = self.call(with: inCall.uuid) else {
             Log.error?.message("Call with UUID \(inCall.uuid) disconnected, but no such call exists!")
             return
@@ -82,7 +82,7 @@ public class CallManager : NSObject, CallDelegate {
         call.isActive = false
     }
     
-    func callCancelled(_ inCall : Call){
+    public func callCancelled(_ inCall : Call){
         guard let call = self.call(with: inCall.uuid) else {
             Log.error?.message("Call with UUID \(inCall.uuid) was cancelled, but no such call exists!")
             return
@@ -90,11 +90,15 @@ public class CallManager : NSObject, CallDelegate {
         call.isActive = false
     }
     
-    func callReceived(_ inCall : Call){
+    public func callReceived(_ inCall : Call){
         incomingCalls.append(inCall)
     }
     
-    func call(_ inCall : Call, didFailWithError : Error){
-        
+    public func call(_ inCall : Call, didFailWithError : Error){
+        guard let call = self.call(with: inCall.uuid) else {
+            Log.error?.message("Call with UUID \(inCall.uuid) failed, but no such call exists!")
+            return
+        }
+        call.isActive = false
     }
 }

@@ -295,8 +295,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = B5S56929D8;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Frameworks";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../Frameworks";
 				INFOPLIST_FILE = TMQTelephonyTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(SRCROOT)/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.barefootsystems.TMQTelephonyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -307,8 +309,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				DEVELOPMENT_TEAM = B5S56929D8;
+				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../Frameworks";
+				HEADER_SEARCH_PATHS = "$(SRCROOT)/../Frameworks";
 				INFOPLIST_FILE = TMQTelephonyTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks $(SRCROOT)/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.barefootsystems.TMQTelephonyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;

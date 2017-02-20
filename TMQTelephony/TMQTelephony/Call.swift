@@ -17,9 +17,8 @@ protocol CallDelegate {
 }
 
 public class Call {
-
     ///Is this call in progress?
-    var isActive : Bool = false {
+    public var isActive : Bool = false {
         didSet {
             if !isActive {
                 endDate = Date()
@@ -28,14 +27,16 @@ public class Call {
     }
     
     ///Outbound or inbound?
-    let isOutgoing : Bool
+    public let isOutgoing : Bool
     
     ///Contacts this call was/is with
-    var participants : [Contact] = []
+    public var participants : [Contact] = []
     
     ///Date this call was started or received
-    let date : Date
-    private var endDate = Date()
+    public let date : Date
+    
+    //Private: when this call was ended (for computing duration)
+    fileprivate var endDate = Date()
     
     //Duration in seconds
     var duration : TimeInterval {
@@ -49,12 +50,12 @@ public class Call {
     }
  
     ///Is this call currently on hold
-    var isOnHold : Bool = false
+    public var isOnHold : Bool = false
     
     ///Unique ID for this call
-    let uuid : UUID 
+    public let uuid : UUID
     
-    init(outgoing : Bool, uuid : UUID) {
+    public init(outgoing : Bool, uuid : UUID) {
         self.isOutgoing = outgoing
         self.uuid = uuid
         

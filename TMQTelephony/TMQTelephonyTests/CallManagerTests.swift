@@ -11,11 +11,12 @@ import TMQTelephony
 
 class CallManagerTests : XCTestCase {
     
-    var callManager = CallManager()
+    var callManager : CallManager! = nil
     
     override func setUp() {
         super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        
+        callManager = CallManager()
     }
     
     override func tearDown() {
@@ -23,9 +24,27 @@ class CallManagerTests : XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
+    func testCallReceived(){        
+        let uuid = UUID()
+        let call = Call(outgoing: false, uuid: uuid)
+        callManager.callReceived(call)
+        
+        let foundCall = callManager.call(with: uuid)
+        XCTAssertNotNil(foundCall)
+        XCTAssertFalse(foundCall!.isActive)
+    }
+    
+    func testCallConnected(){
+        let uuid = UUID()
+        let call = Call(outgoing: false, uuid: uuid)
+        callManager.callReceived(call)
+        
+        let foundCall = callManager.call(with: uuid)
+        XCTAssertNotNil(foundCall)
+        XCTAssertFalse(foundCall!.isActive)
+        
+        callManager.callDidConnect(call)
+        XCTAssert(foundCall!.isActive)
     }
     
     
