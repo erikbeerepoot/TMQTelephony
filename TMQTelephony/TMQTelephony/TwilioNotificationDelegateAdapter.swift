@@ -26,7 +26,10 @@ class TwilioNotificationDelegateAdapter : NSObject, TVONotificationDelegate {
     //MARK: -
     //MARK: Incoming calls
     public func incomingCallReceived(_ incomingCall: TVOIncomingCall) {
-        let call = Call(outgoing: false, uuid : incomingCall.uuid)
+        let call = Call(outgoing: false, uuid : incomingCall.uuid, to : incomingCall.to)        
+        let contact = Contact(phoneNumber:incomingCall.from)
+        call.participants.append(contact)
+        
         callManager?.callReceived(call)
     }
     
