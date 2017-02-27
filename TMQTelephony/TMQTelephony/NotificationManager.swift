@@ -20,8 +20,7 @@ public class NotificationManager : NSObject, PKPushRegistryDelegate {
     let voipRegistry : PKPushRegistry
     
     var deviceToken : String? = nil
-    
-    
+        
     init(voiceClient : VoiceClient? = nil, notificationDelegate : TVONotificationDelegate) {
         voipRegistry = PKPushRegistry(queue: DispatchQueue.main)
         self.notificationDelegate = notificationDelegate
@@ -70,7 +69,7 @@ public class NotificationManager : NSObject, PKPushRegistryDelegate {
     }
     
     ///Updated creds, re-register with server
-    public func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials:    PKPushCredentials, forType type: PKPushType) {
+    public func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, forType type: PKPushType) {
         guard type == .voIP else {
             return
         }
@@ -99,6 +98,7 @@ public class NotificationManager : NSObject, PKPushRegistryDelegate {
             return
         }
         Log.info?.message("Received incoming VoIP push.")
+        voiceClient.handleNotification(payload.dictionaryPayload, delegate: notificationDelegate)
     }
     
     //MARK: -
