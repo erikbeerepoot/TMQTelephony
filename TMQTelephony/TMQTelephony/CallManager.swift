@@ -11,6 +11,14 @@ import Foundation
 import CleanroomLogger
 import TwilioVoiceClient
 
+///Abstract interface to hide call SDK details, as they differ for different versions of iOS
+protocol SystemTelephonyAdapter {
+    func handleIncomingCall(_ : Call) throws
+    func startCall(_ : Call) throws
+    func stopCall(_ : Call) throws
+    
+}
+
 public class CallManager : NSObject, CallDelegate {
     fileprivate var notificationManager : NotificationManager? = nil
     
@@ -47,7 +55,7 @@ public class CallManager : NSObject, CallDelegate {
     
     ///Get list of all outgoing and incoming calls matching `predicate`, in reverse chronological order
     public func calls(matching predicate : NSPredicate) -> [Call] {
-        return []
+        return [] //STUB
     }
     
     public func call(with uuid : UUID) -> Call? {
