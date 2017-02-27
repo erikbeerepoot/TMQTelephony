@@ -29,6 +29,9 @@ public class Call {
     ///Outbound or inbound?
     public let isOutgoing : Bool
     
+    ///Who is this call going to?
+    public var to : String?
+    
     ///Contacts this call was/is with
     public var participants : [Contact] = []
     
@@ -55,10 +58,11 @@ public class Call {
     ///Unique ID for this call
     public let uuid : UUID
     
-    public init(outgoing : Bool, uuid : UUID) {
+    public init(outgoing : Bool, uuid : UUID, to : String? = nil) {
         self.isOutgoing = outgoing
         self.uuid = uuid
-        
+        self.to = to
+                
         date = Date()
     }
 }
