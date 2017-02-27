@@ -11,7 +11,8 @@ import CleanroomLogger
 
 class TwilioAccessToken {
     struct Constants {
-        static let AccessTokenURL = URL(string: "https://lit-wave-83454.herokuapp.com/")!
+        static let AccessTokenURL = URL(string: "https://blooming-taiga-30350.herokuapp.com/accessToken")!
+        static let placeCallURL = URL(string: "https://blooming-taiga-30350.herokuapp.com/placeCall")!
     }
     
     let accessTokenURL : URL
