@@ -16,6 +16,7 @@
 		037046F61E5A6E26002AF879 /* CallManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046F51E5A6E26002AF879 /* CallManagerTests.swift */; };
 		037046F81E5A6E26002AF879 /* TMQTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03F728F41E5284D5009131AC /* TMQTelephony.framework */; };
 		037046FF1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037046FE1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift */; };
+		03D982B81E6394D400BF8450 /* CallKitCallController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D982B71E6394D400BF8450 /* CallKitCallController.swift */; };
 		03F728F91E5284D5009131AC /* TMQTelephony.h in Headers */ = {isa = PBXBuildFile; fileRef = 03F728F71E5284D5009131AC /* TMQTelephony.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		037046F51E5A6E26002AF879 /* CallManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManagerTests.swift; sourceTree = "<group>"; };
 		037046F71E5A6E26002AF879 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		037046FE1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwilioNotificationDelegateAdapter.swift; sourceTree = "<group>"; };
+		03D982B71E6394D400BF8450 /* CallKitCallController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallKitCallController.swift; sourceTree = "<group>"; };
 		03F728F41E5284D5009131AC /* TMQTelephony.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TMQTelephony.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		03F728F71E5284D5009131AC /* TMQTelephony.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TMQTelephony.h; sourceTree = "<group>"; };
 		03F728F81E5284D5009131AC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 				037046DF1E5A0E0A002AF879 /* NotificationManager.swift */,
 				037046E91E5A22C0002AF879 /* CallManager.swift */,
 				037046FE1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift */,
+				03D982B71E6394D400BF8450 /* CallKitCallController.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -272,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				037046EA1E5A22C0002AF879 /* CallManager.swift in Sources */,
+				03D982B81E6394D400BF8450 /* CallKitCallController.swift in Sources */,
 				037046FF1E5A75F2002AF879 /* TwilioNotificationDelegateAdapter.swift in Sources */,
 				037046E01E5A0E0A002AF879 /* NotificationManager.swift in Sources */,
 				037046EE1E5A2377002AF879 /* Contact.swift in Sources */,
@@ -485,6 +489,7 @@
 				037046FD1E5A6E26002AF879 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		03F728EE1E5284D5009131AC /* Build configuration list for PBXProject "TMQTelephony" */ = {
 			isa = XCConfigurationList;

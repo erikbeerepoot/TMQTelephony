@@ -13,13 +13,14 @@ import CleanroomLogger
 
 import TwilioVoiceClient
 
-class CallKitCallControllerAdapter : NSObject, SystemTelephonyAdapter, CXProviderDelegate {
+class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelegate {
     struct LocalConstants {
-            static let LocalizedProviderName = "TMQTelephonyCallProvider"
+            static let LocalizedProviderName = "TMQCallProvider"
     }
     
     enum CallControllerError : Error {
         case NoParticipantsInCall
+        case MissingDestinationContact
         case InvalidSourceMetadata
     }
     
@@ -52,7 +53,7 @@ class CallKitCallControllerAdapter : NSObject, SystemTelephonyAdapter, CXProvide
         
         super.init()
         
-        callKitProvider?.setDelegate(self, queue: nil)
+        self.callProvider.setDelegate(self, queue: nil)
     }
     
     // MARK: -
@@ -74,11 +75,20 @@ class CallKitCallControllerAdapter : NSObject, SystemTelephonyAdapter, CXProvide
     }
     
     func startCall(_ call : Call) throws {
+        Log.info?.message("Starting call: \(call)")
         
+        guard let to = call.to else {
+            Log.error?.message("Start call failed. No handle to call!")
+            throw CallControllerError.MissingDestinationContact
+        }
+        
+        performStartCallAction(uuid: call.uuid, handle: to)
     }
     
     func stopCall(_ call : Call) throws {
+        Log.info?.message("Stopping call: \(call)")
         
+        performEndCallAction(uuid: call.uuid)        
     }
     
     
@@ -101,9 +111,6 @@ class CallKitCallControllerAdapter : NSObject, SystemTelephonyAdapter, CXProvide
                 Log.error?.message("Failed to report incoming call. Error: \(error)")
                 return
             }
-            
-            // RCP: Workaround per https://forums.developer.apple.com/message/169511
-            VoiceClient.sharedInstance().configureAudioSession()
         }
     }
 
@@ -151,24 +158,48 @@ class CallKitCallControllerAdapter : NSObject, SystemTelephonyAdapter, CXProvide
     //MARK: CXProviderDelegate
     
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
+//        let uuid = UUID()
+//        let handle = CXHandle(type: .emailAddress, value: "jappleseed@apple.com")
+//        
+//        let startCallAction = CXStartCallAction(call: uuid)
+//        startCallAction.destination = handle
+//        
+//        let transaction = CXTransaction(action: startCallAction)
+//        callController.request(transaction) { error in
+//            if let error = error {
+//                print("Error requesting transaction: \(error)")
+//            } else {
+//                print("Requested transaction successfully")
+//            }
+//        }
     }
     
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
-        
+        self.configureAudioSession()
         
         action.fulfill()
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+        
+        
+        action.fulfill()
+    }
+    
+    func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
+        action.fail()
     }
     
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
+        action.fail()
     }
     
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
+        print("audio session active")
     }
     
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
+        disableAudioSession()
     }
     
     func providerDidBegin(_ provider: CXProvider) {
@@ -182,10 +213,19 @@ class CallKitCallControllerAdapter : NSObject, SystemTelephonyAdapter, CXProvide
     func configureAudioSession(){
         let session = AVAudioSession.sharedInstance()
         do {
-            try session.setCategory(AVAudioSessionCategorySoloAmbient)
+            try session.setCategory(AVAudioSessionCategoryPlayAndRecord)
+            try session.setMode(AVAudioSessionModeVoiceChat)
         } catch {
-            Log.error?.message("Unable to configure audio session for call.")
+            Log.error?.message("Unable to configure audio session for call. Error: \(error)")
         }
+    }
+    func disableAudioSession(){
+//        let session = AVAudioSession.sharedInstance()
+//        do {
+//            try session.setActive(false)
+//        } catch {
+//            Log.error?.message("Unable to disable audio session for call. Error: \(error)")
+//        }
     }
     
 }
