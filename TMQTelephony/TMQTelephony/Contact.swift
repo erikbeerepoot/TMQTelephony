@@ -24,7 +24,7 @@ public struct Contact {
     ///Have we blocked this person?
     public let isBlocked : Bool?
     
-    init(firstName : String? = nil, lastName : String? = nil, email : String? = nil, phoneNumber : String? = nil, isBlocked : Bool? = false){
+    public init(firstName : String? = nil, lastName : String? = nil, email : String? = nil, phoneNumber : String? = nil, isBlocked : Bool? = false){
         self.firstName = firstName
         self.lastName = lastName
         self.email = email
