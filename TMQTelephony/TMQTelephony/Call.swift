@@ -56,7 +56,7 @@ public class Call {
     public var isOnHold : Bool = false
     
     ///Unique ID for this call
-    public let uuid : UUID
+    public var uuid : UUID
     
     public init(outgoing : Bool, uuid : UUID, to : String? = nil) {
         self.isOutgoing = outgoing

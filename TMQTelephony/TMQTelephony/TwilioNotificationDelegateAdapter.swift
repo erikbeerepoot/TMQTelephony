@@ -13,7 +13,7 @@ import TwilioVoiceClient
 
 ///Class that adapts the twilio notification interface to our own 
 ///Keeps our own internal api stable, allows us to swap out underlying implementation
-class TwilioNotificationDelegateAdapter : NSObject, TVONotificationDelegate {
+class TwilioNotificationDelegateAdapter : NSObject, TVONotificationDelegate, TVOIncomingCallDelegate, TVOOutgoingCallDelegate {
     //Dont hold a strong reference to callmanager. If it doesn't exist, we dont need to either
     weak var callManager : CallManager?
     
@@ -72,7 +72,7 @@ class TwilioNotificationDelegateAdapter : NSObject, TVONotificationDelegate {
     
     public func outgoingCallDidDisconnect(_ outgoingCall: TVOOutgoingCall) {
         if let call = callManager?.call(with: outgoingCall.uuid) {
-            callManager?.callDidConnect(call)
+            callManager?.callDidDisconnect(call)
         }
     }
     

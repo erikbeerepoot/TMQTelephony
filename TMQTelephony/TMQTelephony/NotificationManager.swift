@@ -14,14 +14,15 @@ import CleanroomLogger
 import TwilioVoiceClient
 
 public class NotificationManager : NSObject, PKPushRegistryDelegate {
-    let notificationDelegate : TVONotificationDelegate
+    let notificationDelegate : TwilioNotificationDelegateAdapter
+    
     let voiceClient : VoiceClient
     let accessToken = TwilioAccessToken()
     let voipRegistry : PKPushRegistry
     
     var deviceToken : String? = nil
         
-    init(voiceClient : VoiceClient? = nil, notificationDelegate : TVONotificationDelegate) {
+    init(voiceClient : VoiceClient? = nil, notificationDelegate : TwilioNotificationDelegateAdapter) {
         voipRegistry = PKPushRegistry(queue: DispatchQueue.main)
         self.notificationDelegate = notificationDelegate
         

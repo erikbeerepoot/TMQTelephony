@@ -14,6 +14,7 @@ import CleanroomLogger
 import TwilioVoiceClient
 
 class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelegate {
+    
     struct LocalConstants {
             static let LocalizedProviderName = "TMQCallProvider"
     }
@@ -27,10 +28,10 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     let callController : CXCallController
     let callProvider : CXProvider
     
+    var startCallHandler : ((UUID)->())? = nil
+    
     //DI for testing
     init(callKitController : CXCallController? = nil, callKitProvider : CXProvider? = nil) {
-        
-        
         if callKitProvider == nil {
             //Configure a bare bones calling provider
             let providerConfiguration = CXProviderConfiguration(localizedName: LocalConstants.LocalizedProviderName)
@@ -74,7 +75,7 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
         reportIncomingCall(from: from.phoneNumber ?? from.email! , uuid: call.uuid)
     }
     
-    func startCall(_ call : Call) throws {
+    func startCall(_ call : Call, startCallHandler: @escaping ((UUID) -> ())) throws {
         Log.info?.message("Starting call: \(call)")
         
         guard let to = call.to else {
@@ -82,6 +83,7 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
             throw CallControllerError.MissingDestinationContact
         }
         
+        self.startCallHandler = startCallHandler
         performStartCallAction(uuid: call.uuid, handle: to)
     }
     
@@ -125,7 +127,7 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
                 Log.error?.message("StartCallAction transaction failed: \(error)")
                 return
             }
-            Log.error?.message("StartCallAction transaction succeeded: \(error)")
+            Log.info?.message("StartCallAction transaction succeeded")
             
             let callUpdate = CXCallUpdate()
             callUpdate.remoteHandle = callHandle
@@ -158,32 +160,23 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     //MARK: CXProviderDelegate
     
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
-//        let uuid = UUID()
-//        let handle = CXHandle(type: .emailAddress, value: "jappleseed@apple.com")
-//        
-//        let startCallAction = CXStartCallAction(call: uuid)
-//        startCallAction.destination = handle
-//        
-//        let transaction = CXTransaction(action: startCallAction)
-//        callController.request(transaction) { error in
-//            if let error = error {
-//                print("Error requesting transaction: \(error)")
-//            } else {
-//                print("Requested transaction successfully")
-//            }
-//        }
+        VoiceClient.sharedInstance().configureAudioSession()
+        
+        startCallHandler?(action.uuid)
+        
+        action.fulfill(withDateStarted: Date())
     }
     
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
-        self.configureAudioSession()
+        VoiceClient.sharedInstance().configureAudioSession()
         
         action.fulfill()
     }
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
-        
-        
-        action.fulfill()
+        VoiceClient.sharedInstance().stopAudioDevice()
+                
+        action.fulfill(withDateEnded: Date())
     }
     
     func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
@@ -195,11 +188,11 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     }
     
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
-        print("audio session active")
+        VoiceClient.sharedInstance().startAudioDevice()
     }
     
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
-        disableAudioSession()
+//        disableAudioSession()
     }
     
     func providerDidBegin(_ provider: CXProvider) {
@@ -219,13 +212,6 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
             Log.error?.message("Unable to configure audio session for call. Error: \(error)")
         }
     }
-    func disableAudioSession(){
-//        let session = AVAudioSession.sharedInstance()
-//        do {
-//            try session.setActive(false)
-//        } catch {
-//            Log.error?.message("Unable to disable audio session for call. Error: \(error)")
-//        }
-    }
+    
     
 }

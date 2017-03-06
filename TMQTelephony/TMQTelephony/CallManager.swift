@@ -14,9 +14,13 @@ import TwilioVoiceClient
 ///Abstract interface to hide call SDK details, as they differ for different versions of iOS
 public protocol SystemTelephonyAdapter {
     func handleIncomingCall(_ : Call) throws
-    func startCall(_ : Call) throws
+    func startCall(_ : Call, startCallHandler : (@escaping (UUID)->())) throws
     func stopCall(_ : Call) throws
-    
+}
+
+public protocol CallManagerDelegate {
+    func callConnected(call : Call)
+    func callDisconnected(call : Call)
 }
 
 public class CallManager : NSObject, CallDelegate {
@@ -28,7 +32,11 @@ public class CallManager : NSObject, CallDelegate {
     ///Get list of all incoming calls, in reverse chronological order
     private(set) var  incomingCalls : [Call] = []
     
+    ///Reference to the abstracted telephony framework
     private(set) var telephonyService : SystemTelephonyAdapter? = nil
+    
+    ///For basic call events
+    public var delegate : CallManagerDelegate? = nil
     
     ///Get list of all outgoing and incoming calls, in reverse chronological order
     public var calls : [Call] {
@@ -61,8 +69,8 @@ public class CallManager : NSObject, CallDelegate {
         super.init()
         
         if notificationManager == nil {
-            let notificationDelegateWrapper = TwilioNotificationDelegateAdapter(callManager: self)
-            self.notificationManager = NotificationManager(notificationDelegate: notificationDelegateWrapper)
+            let notificationDelegateAdapter = TwilioNotificationDelegateAdapter(callManager: self)
+            self.notificationManager = NotificationManager(notificationDelegate: notificationDelegateAdapter)
         } else {
             self.notificationManager = notificationManager!
         }
@@ -83,7 +91,33 @@ public class CallManager : NSObject, CallDelegate {
     
     //Initiates an outgoing call
     public func call(contact : Contact) throws {
-        //do a thing
+        guard let notificationManager = self.notificationManager, let accessToken = TwilioAccessToken()?.fetch() else {
+            return
+        }
+        
+        //Create new call
+        let call = Call(outgoing: true, uuid: UUID(), to: contact.phoneNumber)
+        call.participants.append(contact)
+        
+        //Make it so -> 
+        do {
+            try telephonyService?.startCall(call, startCallHandler: { (uuid) in
+                let outgoingCall = VoiceClient.sharedInstance().call(accessToken, params: nil, delegate: notificationManager.notificationDelegate)
+                outgoingCall?.uuid = uuid
+                call.uuid = uuid
+                self.outgoingCalls.append(call)
+            })
+        } catch {
+            Log.warning?.message("Unable to make call: \(call). Error: \(error).")
+        }        
+    }
+    
+    public func end(call : Call) throws {
+        do {
+            try telephonyService?.stopCall(call)
+        } catch {
+            Log.warning?.message("Could not end call: \(call). Error: \(error).")
+        }
     }
     
     //MARK: -
@@ -94,13 +128,10 @@ public class CallManager : NSObject, CallDelegate {
             Log.error?.message("Call with UUID \(inCall.uuid) connected, but no such call exists!")
             return
         }
-                
-        do {
-            try telephonyService?.startCall(inCall)
-            call.isActive = true
-        } catch {
-            Log.error?.message("Unable to start call: \(inCall). Error: \(error)")
-        }
+        call.isActive = true
+        delegate?.callConnected(call: inCall)
+        
+        Log.info?.message("Call \(inCall) connected.")
     }
     
     public func callDidDisconnect(_ inCall : Call){
@@ -115,6 +146,11 @@ public class CallManager : NSObject, CallDelegate {
         } catch {
             Log.error?.message("Unable to stop call: \(inCall). Error: \(error)")
         }
+        call.isActive = false
+        delegate?.callDisconnected(call: inCall)
+        
+        Log.info?.message("Call \(inCall) disconnected.")
+        
     }
     
     public func callCancelled(_ inCall : Call){
@@ -122,15 +158,17 @@ public class CallManager : NSObject, CallDelegate {
             Log.error?.message("Call with UUID \(inCall.uuid) was cancelled, but no such call exists!")
             return
         }
-        
-        
+                
         do {
             try telephonyService?.stopCall(inCall)
             call.isActive = false
         } catch {
             Log.error?.message("Unable to stop call: \(inCall). Error: \(error)")
         }
-
+        call.isActive = false
+        delegate?.callDisconnected(call: inCall)
+        
+        Log.info?.message("Call \(inCall) cancelled.")
     }
     
     public func callReceived(_ inCall : Call){
