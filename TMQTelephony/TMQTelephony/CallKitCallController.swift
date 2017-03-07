@@ -29,6 +29,8 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     let callProvider : CXProvider
     
     var startCallHandler : ((UUID)->())? = nil
+    var stopCallHandler : ((UUID)->())? = nil
+    
     
     //DI for testing
     init(callKitController : CXCallController? = nil, callKitProvider : CXProvider? = nil) {
@@ -59,7 +61,7 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     
     // MARK: -
     // MARK: SystemTelephonyAdapter
-    func handleIncomingCall(_ call : Call) throws {
+    func handleIncomingCall(_ call : Call, incomingCallHandler : ((UUID)->())?) throws {
         //Start a call with the first participant
         guard let from = call.participants.first else {
             Log.error?.message("Received a call without an originating contact!")
@@ -76,7 +78,7 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     }
     
     func startCall(_ call : Call, startCallHandler: @escaping ((UUID) -> ())) throws {
-        Log.info?.message("Starting call: \(call)")
+        Log.info?.message("Starting call: \(call.uuid)")
         
         guard let to = call.to else {
             Log.error?.message("Start call failed. No handle to call!")
@@ -87,9 +89,10 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
         performStartCallAction(uuid: call.uuid, handle: to)
     }
     
-    func stopCall(_ call : Call) throws {
-        Log.info?.message("Stopping call: \(call)")
+    func stopCall(_ call : Call, stopCallHandler :  @escaping ((UUID) -> ())) throws {
+        Log.info?.message("Stopping call: \(call.uuid)")
         
+        self.stopCallHandler = stopCallHandler
         performEndCallAction(uuid: call.uuid)        
     }
     
@@ -152,7 +155,7 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
                 Log.error?.message("EndCallAction transaction failed: \(error).")
                 return
             }
-            Log.error?.message("EndCallAction transaction succeeded")
+            Log.info?.message("EndCallAction transaction succeeded")
         }
     }
     
@@ -175,7 +178,9 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         VoiceClient.sharedInstance().stopAudioDevice()
-                
+        
+        stopCallHandler?(action.uuid)
+        
         action.fulfill(withDateEnded: Date())
     }
     
@@ -191,15 +196,11 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
         VoiceClient.sharedInstance().startAudioDevice()
     }
     
-    func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
-//        disableAudioSession()
-    }
+    func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {}
     
-    func providerDidBegin(_ provider: CXProvider) {
-    }
+    func providerDidBegin(_ provider: CXProvider) {}
     
-    func providerDidReset(_ provider: CXProvider) {
-    }
+    func providerDidReset(_ provider: CXProvider) {}
     
     //MARK: - 
     //MARK: Audio Handling
