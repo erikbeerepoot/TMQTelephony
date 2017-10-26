@@ -13,9 +13,9 @@ import TwilioVoiceClient
 
 ///Abstract interface to hide call SDK details, as they differ for different versions of iOS
 public protocol SystemTelephonyAdapter {
-    func handleIncomingCall(_ : Call, incomingCallHandler: ((UUID)->())?) throws
-    func startCall(_ : Call, startCallHandler : (@escaping (UUID)->())) throws
-    func stopCall(_ : Call, stopCallHandler : (@escaping (UUID)->())) throws
+    func handleIncomingCall(_ : Call, incomingCallHandler: ((Call)->())?) throws
+    func startCall(_ : Call, startCallHandler : ((Call)->())?) throws
+    func stopCall(_ : Call, stopCallHandler : ((Call)->())?) throws
 }
 
 public protocol CallManagerDelegate {

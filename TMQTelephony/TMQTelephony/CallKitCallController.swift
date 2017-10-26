@@ -28,9 +28,11 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     let callController : CXCallController
     let callProvider : CXProvider
     
-    var startCallHandler : ((UUID)->())? = nil
-    var stopCallHandler : ((UUID)->())? = nil
-    
+    var incomingCall : Call?
+    var outgoingCall : Call?
+    var incomingCallHandler : ((Call)->())?
+    var startCallHandler : ((Call)->())?
+    var stopCallHandler : ((Call)->())?
     
     //DI for testing
     init(callKitController : CXCallController? = nil, callKitProvider : CXProvider? = nil) {
@@ -61,7 +63,8 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     
     // MARK: -
     // MARK: SystemTelephonyAdapter
-    func handleIncomingCall(_ call : Call, incomingCallHandler : ((UUID)->())?) throws {
+    
+    func handleIncomingCall(_ call : Call, incomingCallHandler : ((Call)->())?) throws {
         //Start a call with the first participant
         guard let from = call.participants.first else {
             Log.error?.message("Received a call without an originating contact!")
@@ -73,11 +76,15 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
             throw CallControllerError.InvalidSourceMetadata
         }
         
+        self.incomingCallHandler = incomingCallHandler
+        incomingCall = call
+        outgoingCall = nil
+        
         //At this point, force unwrap is safe, since we must have one or the other
         reportIncomingCall(from: from.phoneNumber ?? from.email! , uuid: call.uuid)
     }
     
-    func startCall(_ call : Call, startCallHandler: @escaping ((UUID) -> ())) throws {
+    func startCall(_ call : Call, startCallHandler: ((Call) -> ())?) throws {
         Log.info?.message("Starting call: \(call.uuid)")
         
         guard let to = call.to else {
@@ -86,13 +93,17 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
         }
         
         self.startCallHandler = startCallHandler
+        outgoingCall = call
+        incomingCall = nil
+        
         performStartCallAction(uuid: call.uuid, handle: to)
     }
     
-    func stopCall(_ call : Call, stopCallHandler :  @escaping ((UUID) -> ())) throws {
+    func stopCall(_ call : Call, stopCallHandler : ((Call) -> ())?) throws {
         Log.info?.message("Stopping call: \(call.uuid)")
         
         self.stopCallHandler = stopCallHandler
+        
         performEndCallAction(uuid: call.uuid)        
     }
     
@@ -162,24 +173,38 @@ class CallKitCallController : NSObject, SystemTelephonyAdapter, CXProviderDelega
     //MARK: -
     //MARK: CXProviderDelegate
     
-    func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
-        VoiceClient.sharedInstance().configureAudioSession()
-        
-        startCallHandler?(action.uuid)
-        
-        action.fulfill(withDateStarted: Date())
-    }
-    
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
+        guard let incomingCall = incomingCall else {
+            return
+        }
         VoiceClient.sharedInstance().configureAudioSession()
+        
+        incomingCallHandler?(incomingCall)
         
         action.fulfill()
     }
     
+    
+    func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
+        guard let outgoingCall = outgoingCall else {
+            return
+        }
+        
+        VoiceClient.sharedInstance().configureAudioSession()
+        
+        startCallHandler?(outgoingCall)
+        
+        action.fulfill(withDateStarted: Date())
+    }
+    
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+        guard let call = incomingCall ?? outgoingCall else {
+            return
+        }
+        
         VoiceClient.sharedInstance().stopAudioDevice()
         
-        stopCallHandler?(action.uuid)
+        stopCallHandler?(call)
         
         action.fulfill(withDateEnded: Date())
     }
